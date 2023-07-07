@@ -16,6 +16,7 @@ duration = timedelta(days = 1, hours = 0, minutes = 0)
 current_date = datetime.strptime(current_date, "%Y%m%d")
 
 yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
+print(yest_date)
 
 # enter credentials
 account_name = 'dwhwebstorage'
