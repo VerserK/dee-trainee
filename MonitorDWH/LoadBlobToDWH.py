@@ -15,8 +15,7 @@ duration = timedelta(days = 1, hours = 0, minutes = 0)
 # convert string date to a datetime object
 current_date = datetime.strptime(current_date, "%Y%m%d")
 
-# yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
-yest_date = 'y=2023/m=07/d=05'
+yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
 print(yest_date)
 
 # enter credentials
