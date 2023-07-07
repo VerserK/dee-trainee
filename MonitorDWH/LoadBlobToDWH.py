@@ -9,11 +9,12 @@ import pandas as pd
 import requests
 import pyodbc 
 
-current_date = datetime.now().strftime("%Y%m%d")
+current_date = (datetime.now() + timedelta(hours = 7)).strftime("%Y%m%d %H%M%S")
 duration = timedelta(days = 1, hours = 0, minutes = 0)
 
 # convert string date to a datetime object
 current_date = datetime.strptime(current_date, "%Y%m%d")
+print(current_date)
 
 yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
 print(yest_date)
