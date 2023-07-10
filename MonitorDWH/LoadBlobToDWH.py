@@ -18,7 +18,7 @@ import pyodbc
 # logging.info(current_date)
 
 # yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
-yest_date = 'y=2023/m=07/d=07'
+yest_date = 'y=2023/m=07/d=08'
 logging.info(yest_date)
 
 # enter credentials
