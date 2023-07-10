@@ -10,14 +10,15 @@ import pandas as pd
 import requests
 import pyodbc 
 
-current_date = datetime.now() + timedelta(hours = 7)
-duration = timedelta(days = 1, hours = 0, minutes = 0)
+# current_date = datetime.now() + timedelta(hours = 7)
+# duration = timedelta(days = 1, hours = 0, minutes = 0)
 
 # convert string date to a datetime object
 # current_date = datetime.strptime(current_date, "%Y%m%d")
-logging.info(current_date)
+# logging.info(current_date)
 
-yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
+# yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
+yest_date = 'y=2023/m=07/d=06'
 logging.info(yest_date)
 
 # enter credentials
