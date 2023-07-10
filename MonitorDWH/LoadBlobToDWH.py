@@ -5,10 +5,10 @@ Created on Thu Jun 29 13:50:32 2023
 """
 from datetime import datetime, timedelta
 import logging
-# from azure.storage.blob import BlobServiceClient, generate_blob_sas, BlobSasPermissions
-# import pandas as pd
-# import requests
-# import pyodbc 
+from azure.storage.blob import BlobServiceClient, generate_blob_sas, BlobSasPermissions
+import pandas as pd
+import requests
+import pyodbc 
 
 # current_date = datetime.now() + timedelta(hours = 7)
 # duration = timedelta(days = 1, hours = 0, minutes = 0)
@@ -115,7 +115,8 @@ def run():
             'application_name', 'host_name']
     records = select_blob_df[columns].values.tolist()
 
-    date = (current_date - duration).strftime("%Y-%m-%d")
+    # date = (current_date - duration).strftime("%Y-%m-%d")
+    date  yest_date
     url = 'https://notify-api.line.me/api/notify'
     token = 'aXzjxvURWjvwVPotxsVfdLa9eWSNiBbiuKvzJnIfadZ'
     headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
