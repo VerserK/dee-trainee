@@ -11,8 +11,10 @@ import requests
 import pyodbc 
 
 current_date = datetime.now()
-duration = timedelta(days = 1, hours = 0, minutes = 0)
-logging.info(current_date)
+
+# current_date = datetime.now()
+# duration = timedelta(days = 1, hours = 0, minutes = 0)
+# logging.info(current_date)
 
 # current_date = datetime.now() + timedelta(hours = 7)
 # duration = timedelta(days = 1, hours = 0, minutes = 0)
@@ -21,7 +23,7 @@ logging.info(current_date)
 # current_date = datetime.strptime(current_date, "%Y%m%d")
 # logging.info(current_date)
 
-yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
+yest_date = current_date.strftime("y=%Y/m=%m/d=%d")
 print("Yesterday Date: " + yest_date)
 
 # enter credentials
@@ -118,7 +120,8 @@ def run():
             'application_name', 'host_name']
     records = select_blob_df[columns].values.tolist()
 
-    date = (current_date - duration).strftime("%Y-%m-%d")
+    # date = (current_date - duration).strftime("%Y-%m-%d")
+    date = current_date.strftime("%Y-%m-%d")
     url = 'https://notify-api.line.me/api/notify'
     token = 'aXzjxvURWjvwVPotxsVfdLa9eWSNiBbiuKvzJnIfadZ'
     headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
