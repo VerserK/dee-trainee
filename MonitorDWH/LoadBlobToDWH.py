@@ -5,10 +5,10 @@ Created on Thu Jun 29 13:50:32 2023
 """
 from datetime import datetime, timedelta
 import logging
-from azure.storage.blob import BlobServiceClient, generate_blob_sas, BlobSasPermissions
-import pandas as pd
-import requests
-import pyodbc 
+# from azure.storage.blob import BlobServiceClient, generate_blob_sas, BlobSasPermissions
+# import pandas as pd
+# import requests
+# import pyodbc 
 
 # current_date = datetime.now() + timedelta(hours = 7)
 # duration = timedelta(days = 1, hours = 0, minutes = 0)
