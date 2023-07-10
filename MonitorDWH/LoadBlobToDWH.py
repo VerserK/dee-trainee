@@ -10,8 +10,8 @@ import pandas as pd
 import requests
 import pyodbc 
 
-current_date = datetime.now().strftime("y=%Y/m=%m/d=%d")
-yest_date = current_date
+current_date = datetime.now()
+duration = timedelta(days = 1, hours = 0, minutes = 0)
 logging.info(current_date)
 
 # current_date = datetime.now() + timedelta(hours = 7)
@@ -21,9 +21,8 @@ logging.info(current_date)
 # current_date = datetime.strptime(current_date, "%Y%m%d")
 # logging.info(current_date)
 
-# yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
-# yest_date = 'y=2023/m=07/d=08'
-# logging.info(yest_date)
+yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
+print("Yesterday Date: " + yest_date)
 
 # enter credentials
 account_name = 'dwhwebstorage'
@@ -119,8 +118,7 @@ def run():
             'application_name', 'host_name']
     records = select_blob_df[columns].values.tolist()
 
-    # date = (current_date - duration).strftime("%Y-%m-%d")
-    date = yest_date
+    date = (current_date - duration).strftime("%Y-%m-%d")
     url = 'https://notify-api.line.me/api/notify'
     token = 'aXzjxvURWjvwVPotxsVfdLa9eWSNiBbiuKvzJnIfadZ'
     headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
