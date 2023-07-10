@@ -116,7 +116,7 @@ def run():
     records = select_blob_df[columns].values.tolist()
 
     # date = (current_date - duration).strftime("%Y-%m-%d")
-    date  yest_date
+    date = yest_date
     url = 'https://notify-api.line.me/api/notify'
     token = 'aXzjxvURWjvwVPotxsVfdLa9eWSNiBbiuKvzJnIfadZ'
     headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
