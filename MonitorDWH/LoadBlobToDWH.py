@@ -24,7 +24,7 @@ current_date = datetime.now()
 # logging.info(current_date)
 
 yest_date = current_date.strftime("y=%Y/m=%m/d=%d")
-print("Yesterday Date: " + yest_date)
+logging.info("Yesterday Date: " + yest_date)
 
 # enter credentials
 account_name = 'dwhwebstorage'
