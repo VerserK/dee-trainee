@@ -113,7 +113,7 @@ def run():
 
     date = (current_date - duration).strftime("%Y-%m-%d")
     url = 'https://notify-api.line.me/api/notify'
-    token = 'aXzjxvURWjvwVPotxsVfdLa9eWSNiBbiuKvzJnIfadZ'
+    token = 'IRaKin5u1mtD4Ut4PIcEJUWWQzwvEqj0m4H9ddZBEgb'
     headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
 
     # create a cursor connection for Customermaster DB
