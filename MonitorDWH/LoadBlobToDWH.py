@@ -10,8 +10,8 @@ import pandas as pd
 import requests
 import pyodbc 
 
-current_date = datetime.now()
-duration = timedelta(days = 1, hours = 0, minutes = 0)
+current_date = datetime.now() 
+duration = timedelta(days = 2, hours = 0, minutes = 0)
 logging.info(current_date)
 
 yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
