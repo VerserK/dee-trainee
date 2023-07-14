@@ -11,7 +11,7 @@ import requests
 import pyodbc 
 
 current_date = datetime.now()
-duration = timedelta (hours = 2)
+duration = timedelta(hours = 2)
 logging.info(current_date)
 
 yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
