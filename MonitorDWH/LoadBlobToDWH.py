@@ -15,7 +15,7 @@ duration = timedelta(hours = 2)
 logging.info(current_date)
 
 # yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
-yest_date = 'y=2023/m=07/d=14'
+yest_date = 'y=2023/m=07/d=15'
 logging.info("Yesterday Date: " + yest_date)
 
 # enter credentials
