@@ -10,14 +10,6 @@ import pandas as pd
 import requests
 import pyodbc 
 
-current_date = datetime.now()
-duration = timedelta(hours = 2)
-logging.info(current_date)
-
-# yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
-yest_date = 'y=2023/m=07/d=15'
-logging.info("Yesterday Date: " + yest_date)
-
 # enter credentials
 account_name = 'dwhwebstorage'
 account_key = 'A8aP+xOBBD5ahXo9Ch6CUvzsqkM5oyGn1/R3kcFcNSrZw4aU0nE7SQCBhHQFYif1AEPlZ4/pAoP/+AStKRerPQ=='
@@ -31,6 +23,13 @@ blob_service_client = BlobServiceClient.from_connection_string(connect_str)
 container_client = blob_service_client.get_container_client(container_name)
 
 def run():
+    current_date = datetime.now()
+    duration = timedelta(hours = 2)
+    logging.info(current_date)
+
+    yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
+    logging.info("Yesterday Date: " + yest_date)
+
     #get a list of all blob files in the container
     blob_list = []
     for blob_i in container_client.list_blobs():
