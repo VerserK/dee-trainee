@@ -24,21 +24,32 @@ container_client = blob_service_client.get_container_client(container_name)
 
 def run():
     current_date = datetime.now()
-    duration = timedelta(hours = 2)
     logging.info(current_date)
 
-    yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
-    logging.info("Yesterday Date: " + yest_date)
+    one_day = timedelta(days = 1, hours = 0, minutes = 0)
+    two_day = timedelta(days = 2, hours = 0, minutes = 0)
 
-    #get a list of all blob files in the container
+    day_sub_1 = current_date - one_day
+    day_sub_2 = current_date - two_day
+
+    # convert datetime object to string date
+    day_sub_1 = day_sub_1.strftime("y=%Y/m=%m/d=%d")
+    logging.info("Day-1: " + day_sub_1)
+
+    day_sub_2 = day_sub_2.strftime("y=%Y/m=%m/d=%d")
+    logging.info("Day-2: " + day_sub_2)
+
+    # get a list of all blob files in the container
     blob_list = []
     for blob_i in container_client.list_blobs():
-        if blob_i.name[142:158] == yest_date:
-            blob_list.append(blob_i.name)
+        # date = day - 1
+        if blob_i.name[142:158] == day_sub_1:
+            # h00 - h17
+            if blob_i.name[161:163] <= '17':
+                blob_list.append(blob_i.name)
         
     df_list = []
     # generate a shared access signiture for files and load them into Python
-
     for blob_i in blob_list:
         # generate a shared access signature for each blob file
         sas_i = generate_blob_sas(account_name = account_name,
@@ -78,8 +89,7 @@ def run():
                                                                     "properties.application_name": "application_name",
                                                                     "properties.host_name": "host_name"})
 
-    # selected only wanted columns
-    # blob_df = df_combined_normalized
+    # choose action_name = 'SELECT'
     blob_df = df_combined_normalized[['originalEventTimestamp', 'action_name', 'succeeded', 'session_id', 'object_id', 'transaction_id', 'client_ip',
                                     'session_server_principal_name', 'server_principal_name', 'database_principal_name', 'database_name', 'object_name', 
                                     'application_name', 'host_name']]
@@ -111,7 +121,7 @@ def run():
             'application_name', 'host_name']
     records = select_blob_df[columns].values.tolist()
 
-    date = (current_date - duration).strftime("%Y-%m-%d")
+    date = (current_date - one_day).strftime("%Y-%m-%d")
     url = 'https://notify-api.line.me/api/notify'
     token = 'IRaKin5u1mtD4Ut4PIcEJUWWQzwvEqj0m4H9ddZBEgb'
     headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
