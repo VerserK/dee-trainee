@@ -54,11 +54,11 @@ def run():
     for blob_i in blob_list:
         # generate a shared access signature for each blob file
         sas_i = generate_blob_sas(account_name = account_name,
-                                container_name = container_name,
-                                blob_name = blob_i,
-                                account_key=account_key,
-                                permission=BlobSasPermissions(read=True),
-                                expiry=datetime.utcnow() + timedelta(hours=1))
+                                  container_name = container_name,
+                                  blob_name = blob_i,
+                                  account_key=account_key,
+                                  permission=BlobSasPermissions(read=True),
+                                  expiry=datetime.utcnow() + timedelta(hours=1))
         
         sas_url = 'https://' + account_name+'.blob.core.windows.net/' + container_name + '/' + blob_i + '?' + sas_i
         
@@ -147,6 +147,9 @@ def run():
     except Exception as e:
         cursor.rollback()
         logging.info(e)
+
+        message = e
+        requests.post(url, headers = headers, data = {'message': message})
     finally:
         logging.info("Connection close...")
         cursor.close()
