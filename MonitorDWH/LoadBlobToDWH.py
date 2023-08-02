@@ -39,21 +39,13 @@ def run():
     day_sub_2 = day_sub_2.strftime("y=%Y/m=%m/d=%d")
     logging.info("Day-2: " + day_sub_2)
 
-    # get a list of all blob files in the container
+    yest_date = 'y=2023/m=07/d=30'
+
+    #get a list of all blob files in the container
     blob_list = []
     for blob_i in container_client.list_blobs():
-    
-        # date = day - 2
-        if blob_i.name[142:158] == day_sub_2:
-            # h18 - h23
-            if blob_i.name[161:163] > '17' and blob_i.name[161:163] <= '23':
-                blob_list.append(blob_i.name)
-            
-        # date = day - 1        
-        elif blob_i.name[142:158] == day_sub_1:
-            # h00 - h17
-            if blob_i.name[161:163] <= '17':
-                blob_list.append(blob_i.name)
+        if blob_i.name[142:158] == yest_date:
+            blob_list.append(blob_i.name)
         
     df_list = []
     # generate a shared access signiture for files and load them into Python
@@ -128,7 +120,8 @@ def run():
             'application_name', 'host_name']
     records = select_blob_df[columns].values.tolist()
 
-    date = (current_date - one_day).strftime("%Y-%m-%d")
+    # date = (current_date - one_day).strftime("%Y-%m-%d")
+    date = yest_date
     url = 'https://notify-api.line.me/api/notify'
     token = 'IRaKin5u1mtD4Ut4PIcEJUWWQzwvEqj0m4H9ddZBEgb'
     headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
