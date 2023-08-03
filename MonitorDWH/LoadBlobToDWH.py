@@ -39,12 +39,18 @@ def run():
     day_sub_2 = day_sub_2.strftime("y=%Y/m=%m/d=%d")
     logging.info("Day-2: " + day_sub_2)
 
-     # get a list of all blob files in the container
+    # get a list of all blob files in the container
     blob_list = []
     for blob_i in container_client.list_blobs():
     
-        # date = day - 1
-        if blob_i.name[142:158] == day_sub_1:
+        # date = day - 2
+        if blob_i.name[142:158] == day_sub_2:
+            # h18 - h23
+            if blob_i.name[161:163] > '17' and blob_i.name[161:163] <= '23':
+                blob_list.append(blob_i.name)
+            
+        # date = day - 1        
+        elif blob_i.name[142:158] == day_sub_1:
             # h00 - h17
             if blob_i.name[161:163] <= '17':
                 blob_list.append(blob_i.name)
