@@ -111,6 +111,11 @@ def run():
     # table = 'dbo.Customermaster'
     connectionString = 'DRIVER=' + driver + ';SERVER=' + server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password
 
+    date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    url = 'https://notify-api.line.me/api/notify'
+    token = 'IRaKin5u1mtD4Ut4PIcEJUWWQzwvEqj0m4H9ddZBEgb'
+    headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
+
     # create database connection instance
     try:
         conn = pyodbc.connect(connectionString)
@@ -118,20 +123,21 @@ def run():
     except pyodbc.DatabaseError as e:
         logging.info("Database Error: ")
         logging.info(str(e.value[1]))
+
+        message = "Database Error"
+        requests.post(url, headers = headers, data = {'message': message})
     except pyodbc.Error as e:
         logging.info("Connection Error: ")
         logging.info(str(e.vale[1]))
+
+        message = "Connection Error"
+        requests.post(url, headers = headers, data = {'message': message})
         
     # specify columns that want to import
     columns = ['originalEventTimestamp', 'action_name', 'succeeded', 'session_id', 'object_id', 'transaction_id', 'client_ip',
             'session_server_principal_name', 'server_principal_name', 'database_principal_name', 'database_name', 'object_name', 
             'application_name', 'host_name']
     records = select_blob_df[columns].values.tolist()
-
-    date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    url = 'https://notify-api.line.me/api/notify'
-    token = 'IRaKin5u1mtD4Ut4PIcEJUWWQzwvEqj0m4H9ddZBEgb'
-    headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
 
     # create a cursor connection for Customermaster DB
     insert = '''
