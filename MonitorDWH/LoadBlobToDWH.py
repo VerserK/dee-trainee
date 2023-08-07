@@ -39,7 +39,7 @@ def run():
     day_sub_2 = day_sub_2.strftime("y=%Y/m=%m/d=%d")
     logging.info("Day-2: " + day_sub_2)
 
-    yest_date = 'y=2023/m=08/d=04'
+    yest_date = 'y=2023/m=08/d=05'
 
     # get a list of all blob files in the container
     blob_list = []
