@@ -122,13 +122,13 @@ def run():
         logging.info("Connection Success")
     except pyodbc.DatabaseError as e:
         logging.info("Database Error: ")
-        logging.info(str(e.value[1]))
+        logging.info(str(e))
 
         message = "Database Error"
         requests.post(url, headers = headers, data = {'message': message})
     except pyodbc.Error as e:
         logging.info("Connection Error: ")
-        logging.info(str(e.vale[1]))
+        logging.info(str(e))
 
         message = "Connection Error"
         requests.post(url, headers = headers, data = {'message': message})
