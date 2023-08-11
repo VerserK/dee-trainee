@@ -4,8 +4,7 @@
 
 azure-functions
 pandas
-pyodbc
 requests
 azure-storage-blob
 sqlalchemy
-SQLAlchemyError
+sqlalchemy.exc
