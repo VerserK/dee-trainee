@@ -7,4 +7,3 @@ pandas
 requests
 azure-storage-blob
 sqlalchemy
-sqlalchemy.exc
