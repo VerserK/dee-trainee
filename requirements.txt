@@ -7,3 +7,5 @@ pandas
 pyodbc
 requests
 azure-storage-blob
+sqlalchemy
+SQLAlchemyError
