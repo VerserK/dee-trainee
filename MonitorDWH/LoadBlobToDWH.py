@@ -6,7 +6,7 @@ Created on Thu Jun 29 13:50:32 2023
 from datetime import datetime, timedelta
 from azure.storage.blob import BlobServiceClient, generate_blob_sas, BlobSasPermissions
 import sqlalchemy as sa
-import SQLAlchemyError
+from sqlalchemy import excs
 import urllib
 import pandas as pd
 import requests
