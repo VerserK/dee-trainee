@@ -6,4 +6,4 @@ azure-functions
 pandas
 requests
 azure-storage-blob
-sqlalchemy
+SQLAlchemy

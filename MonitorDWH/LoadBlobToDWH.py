@@ -6,7 +6,7 @@ Created on Thu Jun 29 13:50:32 2023
 from datetime import datetime, timedelta
 from azure.storage.blob import BlobServiceClient, generate_blob_sas, BlobSasPermissions
 import sqlalchemy as sa
-from sqlalchemy import excs
+from sqlalchemy import exc
 import urllib
 import pandas as pd
 import requests
@@ -132,7 +132,7 @@ def run():
         engine = sa.create_engine('mssql+pyodbc:///?odbc_connect=%s' % param)
         conn = engine.connect()
         logging.info("Connected to the database successfully!")
-    except SQLAlchemyError as e:
+    except exc.SQLAlchemyError as e:
         logging.info("An error occurred:", str(e))
         message = "An error occurred: {}".format(str(e))
         requests.post(url, headers = headers, data = {'message': message})
@@ -145,7 +145,7 @@ def run():
         message = "Load data on date {} successfully!!".format(date)
         requests.post(url, headers = headers, data = {'message': message})
         logging.info("Inserted successfully!")
-    except SQLAlchemyError as e:
+    except exc.SQLAlchemyError as e:
         logging.info("An error occurred:", e)
         message = "An error occurred: {}".format(str(e))
         requests.post(url, headers = headers, data = {'message': message})
