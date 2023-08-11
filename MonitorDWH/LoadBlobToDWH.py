@@ -108,7 +108,6 @@ def run():
     username = 'boon'
     password = 'DEE@DA123'
     driver = '{ODBC Driver 17 for SQL Server}'
-    # table = 'dbo.Customermaster'
     connectionString = 'DRIVER=' + driver + ';SERVER=' + server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password
 
     date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
