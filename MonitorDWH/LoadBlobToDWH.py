@@ -29,42 +29,34 @@ def run():
     current_date = datetime.now()
     logging.info(current_date)
 
-    # one_day = timedelta(days = 1, hours = 0, minutes = 0)
-    # # two_day = timedelta(days = 2, hours = 0, minutes = 0)
+    one_day = timedelta(days = 1, hours = 0, minutes = 0)
+    # two_day = timedelta(days = 2, hours = 0, minutes = 0)
 
-    # day_sub_1 = current_date
-    # day_sub_2 = current_date - one_day
+    day_sub_1 = current_date
+    day_sub_2 = current_date - one_day
 
-    # # convert datetime object to string date
-    # day_sub_1 = day_sub_1.strftime("y=%Y/m=%m/d=%d")
-    # logging.info("Day-1: " + day_sub_1)
+    # convert datetime object to string date
+    day_sub_1 = day_sub_1.strftime("y=%Y/m=%m/d=%d")
+    logging.info("Day-1: " + day_sub_1)
 
-    # day_sub_2 = day_sub_2.strftime("y=%Y/m=%m/d=%d")
-    # logging.info("Day-2: " + day_sub_2)
-
-    yest_date = 'y=2023/m=08/d=15'
+    day_sub_2 = day_sub_2.strftime("y=%Y/m=%m/d=%d")
+    logging.info("Day-2: " + day_sub_2)
 
     # get a list of all blob files in the container
     blob_list = []
     for blob_i in container_client.list_blobs():
-        if blob_i.name[142:158] == yest_date:
-            blob_list.append(blob_i.name)
-
-    # # get a list of all blob files in the container
-    # blob_list = []
-    # for blob_i in container_client.list_blobs():
     
-    #     # date = day - 2
-    #     if blob_i.name[142:158] == day_sub_2:
-    #         # h18 - h23
-    #         if blob_i.name[161:163] > '17' and blob_i.name[161:163] <= '23':
-    #             blob_list.append(blob_i.name)
+        # date = day - 2
+        if blob_i.name[142:158] == day_sub_2:
+            # h18 - h23
+            if blob_i.name[161:163] > '17' and blob_i.name[161:163] <= '23':
+                blob_list.append(blob_i.name)
             
-    #     # date = day - 1        
-    #     elif blob_i.name[142:158] == day_sub_1:
-    #         # h00 - h17
-    #         if blob_i.name[161:163] <= '17':
-    #             blob_list.append(blob_i.name)
+        # date = day - 1        
+        elif blob_i.name[142:158] == day_sub_1:
+            # h00 - h17
+            if blob_i.name[161:163] <= '17':
+                blob_list.append(blob_i.name)
         
     df_list = []
     # generate a shared access signiture for files and load them into Python
@@ -125,7 +117,7 @@ def run():
     username = 'boon'
     password = 'DEE@DA123'
     driver = '{ODBC Driver 17 for SQL Server}'
-    timeout_value = 60
+    timeout_value = 10
 
     connection_string = (
         'DRIVER=' + driver +
