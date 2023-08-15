@@ -26,7 +26,9 @@ blob_service_client = BlobServiceClient.from_connection_string(connect_str)
 container_client = blob_service_client.get_container_client(container_name)
 
 def run():
-    current_date = datetime.now()
+    # current_date = datetime.now()
+    duration = timedelta(days = 4)
+    current_date = datetime.now() - duration
     logging.info(current_date)
 
     one_day = timedelta(days = 1, hours = 0, minutes = 0)
