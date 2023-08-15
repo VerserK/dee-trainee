@@ -128,7 +128,7 @@ def run():
         conn = engine.connect()
         logging.info("Connected to the database successfully!")
     except exc.SQLAlchemyError as e:
-        logging.info("An error occurred:", str(e))
+        logging.info("An error occurred: %s", str(e))
         message = "An error occurred: {}".format(str(e))
         requests.post(url, headers = headers, data = {'message': message})
         
@@ -141,7 +141,7 @@ def run():
         requests.post(url, headers = headers, data = {'message': message})
         logging.info("Inserted successfully!")
     except exc.SQLAlchemyError as e:
-        logging.info("An error occurred:", e)
+        logging.info("An error occurred: %s", str(e))
         message = "An error occurred: {}".format(str(e))
         requests.post(url, headers = headers, data = {'message': message})
     finally:
