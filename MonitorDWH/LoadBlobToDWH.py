@@ -47,7 +47,7 @@ def run():
     # get a list of all blob files in the container
     blob_list = []
     for blob_i in container_client.list_blobs():
-        if blob_i.name[142:158] >= date and blob_i.name[142:158] == yest_date:
+        if blob_i.name[142:158] == yest_date:
             blob_list.append(blob_i.name)
 
     # # get a list of all blob files in the container
