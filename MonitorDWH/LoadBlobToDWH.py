@@ -117,7 +117,7 @@ def run():
     username = 'boon'
     password = 'DEE@DA123'
     driver = '{ODBC Driver 17 for SQL Server}'
-    timeout_value = 10
+    timeout_value = 60
 
     connection_string = (
         'DRIVER=' + driver +
