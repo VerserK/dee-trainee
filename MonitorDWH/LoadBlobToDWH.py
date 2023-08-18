@@ -121,7 +121,6 @@ def run():
         ';UID=' + username + ';PWD=' + password
     )
 
-    date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     url = 'https://notify-api.line.me/api/notify'
     token = 'IRaKin5u1mtD4Ut4PIcEJUWWQzwvEqj0m4H9ddZBEgb'
     headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
@@ -142,6 +141,7 @@ def run():
         logging.info("Running....")
         select_blob_df.to_sql('dwhstorage', conn, if_exists='append', index=False, chunksize=1000)
 
+        date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         message = "Load data on date {} successfully!!".format(date)
         requests.post(url, headers = headers, data = {'message': message})
         logging.info("Inserted successfully!")
