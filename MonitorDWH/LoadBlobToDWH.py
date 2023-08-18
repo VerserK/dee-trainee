@@ -30,10 +30,10 @@ def run():
     logging.info(current_date)
 
     one_day = timedelta(days = 1, hours = 0, minutes = 0)
-    # two_day = timedelta(days = 2, hours = 0, minutes = 0)
+    two_day = timedelta(days = 2, hours = 0, minutes = 0)
 
-    day_sub_1 = current_date
-    day_sub_2 = current_date - one_day
+    day_sub_1 = current_date - one_day
+    day_sub_2 = current_date - two_day
 
     # convert datetime object to string date
     day_sub_1 = day_sub_1.strftime("y=%Y/m=%m/d=%d")
@@ -106,11 +106,6 @@ def run():
                                     'application_name', 'host_name']]
     select_blob_df = blob_df[blob_df["action_name"] == "SELECT"]
 
-    date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    url = 'https://notify-api.line.me/api/notify'
-    token = 'IRaKin5u1mtD4Ut4PIcEJUWWQzwvEqj0m4H9ddZBEgb'
-    headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
-
     # create SQL server connection string
     server = 'dwhsqldev01.database.windows.net'
     database = 'DWHStorage'
@@ -125,6 +120,11 @@ def run():
         ';PORT=1433;DATABASE=' + database +
         ';UID=' + username + ';PWD=' + password
     )
+
+    date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    url = 'https://notify-api.line.me/api/notify'
+    token = 'IRaKin5u1mtD4Ut4PIcEJUWWQzwvEqj0m4H9ddZBEgb'
+    headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
 
     # create database connection instance
     try:
