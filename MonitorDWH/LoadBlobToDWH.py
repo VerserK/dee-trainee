@@ -26,14 +26,14 @@ blob_service_client = BlobServiceClient.from_connection_string(connect_str)
 container_client = blob_service_client.get_container_client(container_name)
 
 def run():
-    current_date = datetime.now()
+    current_date = datetime.now() - timedelta(days = 3)
     logging.info(current_date)
 
     one_day = timedelta(days = 1, hours = 0, minutes = 0)
-    two_day = timedelta(days = 2, hours = 0, minutes = 0)
+    # two_day = timedelta(days = 2, hours = 0, minutes = 0)
 
-    day_sub_1 = current_date - one_day
-    day_sub_2 = current_date - two_day
+    day_sub_1 = current_date
+    day_sub_2 = current_date - one_day
 
     # convert datetime object to string date
     day_sub_1 = day_sub_1.strftime("y=%Y/m=%m/d=%d")
