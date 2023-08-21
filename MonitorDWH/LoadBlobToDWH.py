@@ -26,7 +26,7 @@ blob_service_client = BlobServiceClient.from_connection_string(connect_str)
 container_client = blob_service_client.get_container_client(container_name)
 
 def run():
-    current_date = datetime.now() - timedelta(days = 3)
+    current_date = datetime.now() - timedelta(days = 2)
     logging.info(current_date)
 
     one_day = timedelta(days = 1, hours = 0, minutes = 0)
@@ -141,7 +141,7 @@ def run():
         logging.info("Running....")
         select_blob_df.to_sql('dwhstorage', conn, if_exists='append', index=False, chunksize=1000)
 
-        date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        date = current_date.strftime("%Y-%m-%d %H:%M:%S")
         message = "Load data on date {} successfully!!".format(date)
         requests.post(url, headers = headers, data = {'message': message})
         logging.info("Inserted successfully!")
