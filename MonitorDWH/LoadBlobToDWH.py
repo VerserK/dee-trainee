@@ -26,7 +26,7 @@ blob_service_client = BlobServiceClient.from_connection_string(connect_str)
 container_client = blob_service_client.get_container_client(container_name)
 
 def run():
-    current_date = datetime.now() - timedelta(days = 2)
+    current_date = datetime.now() - timedelta(days = 1)
     current_date = current_date.strftime("y=%Y/m=%m/d=%d")
     logging.info("Current date: " + current_date)
 
@@ -49,10 +49,7 @@ def run():
     
         # date = day - 2
         if blob_i.name[142:158] == current_date:
-    
-            # h18 - h23
-            if blob_i.name[161:163] > '17' and blob_i.name[161:163] <= '23':
-                blob_list.append(blob_i.name)
+            blob_list.append(blob_i.name)
         
     df_list = []
     # generate a shared access signiture for files and load them into Python
@@ -136,7 +133,7 @@ def run():
     try:
         logging.info("Running....")
         select_blob_df.to_sql('dwhstorage', conn, if_exists='append', index=False, chunksize=1000)
-        
+
         message = "Load data on date {} successfully!!".format(current_date)
         requests.post(url, headers = headers, data = {'message': message})
         logging.info("Inserted successfully!")
