@@ -136,9 +136,8 @@ def run():
     try:
         logging.info("Running....")
         select_blob_df.to_sql('dwhstorage', conn, if_exists='append', index=False, chunksize=1000)
-
-        date = current_date.strftime("%Y-%m-%d %H:%M:%S")
-        message = "Load data on date {} successfully!!".format(date)
+        
+        message = "Load data on date {} successfully!!".format(current_date)
         requests.post(url, headers = headers, data = {'message': message})
         logging.info("Inserted successfully!")
     except exc.SQLAlchemyError as e:
