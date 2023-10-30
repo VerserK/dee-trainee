@@ -62,6 +62,7 @@ def run():
 
     # get max date from data warehouse  
     try:
+        logging.info("Searching for the maximum date in DWH...")
         role_query = "SELECT MAX(originalEventTimestamp) FROM dwhstorage"
         cursor.execute(role_query)
     
