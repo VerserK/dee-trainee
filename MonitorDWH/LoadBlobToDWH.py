@@ -27,7 +27,7 @@ container_client = blob_service_client.get_container_client(container_name)
 
 def run():
     url = 'https://notify-api.line.me/api/notify'
-    token = 'IRaKin5u1mtD4Ut4PIcEJUWWQzwvEqj0m4H9ddZBEgb'
+    token = '' # REPLACE YOUR TOKEN
     headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
 
     # create SQL server connection string
