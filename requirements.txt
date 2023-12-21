@@ -4,6 +4,7 @@
 
 azure-functions
 pandas
-pyodbc
 requests
 azure-storage-blob
+SQLAlchemy
+pyodbc

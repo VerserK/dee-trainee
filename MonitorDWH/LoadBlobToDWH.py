@@ -4,18 +4,14 @@ Created on Thu Jun 29 13:50:32 2023
 @author: trainee.nongnaphat
 """
 from datetime import datetime, timedelta
-import logging
 from azure.storage.blob import BlobServiceClient, generate_blob_sas, BlobSasPermissions
+import sqlalchemy as sa
+from sqlalchemy import exc
+import pyodbc
+import urllib
 import pandas as pd
 import requests
-import pyodbc 
-
-current_date = datetime.now()
-duration = timedelta(days = 1, hours = 0, minutes = 0)
-logging.info(current_date)
-
-yest_date = (current_date - duration).strftime("y=%Y/m=%m/d=%d")
-logging.info("Yesterday Date: " + yest_date)
+import logging 
 
 # enter credentials
 account_name = 'dwhwebstorage'
@@ -30,23 +26,91 @@ blob_service_client = BlobServiceClient.from_connection_string(connect_str)
 container_client = blob_service_client.get_container_client(container_name)
 
 def run():
-    #get a list of all blob files in the container
+    url = 'https://notify-api.line.me/api/notify'
+    token = '' # REPLACE YOUR TOKEN
+    headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
+
+    # create SQL server connection string
+    server = 'dwhsqldev01.database.windows.net'
+    database = 'DWHStorage'
+    username = 'boon'
+    password = 'DEE@DA123'
+    driver = '{ODBC Driver 17 for SQL Server}'
+    timeout_value = 60
+
+    connection_string = (
+        'DRIVER=' + driver +
+        ';SERVER=' + server +
+        ';PORT=1433;DATABASE=' + database +
+        ';UID=' + username + ';PWD=' + password
+    )
+
+    # create database connection instance
+    try:
+        param = urllib.parse.quote_plus(connection_string)
+        engine = sa.create_engine('mssql+pyodbc:///?odbc_connect=%s;ConnectionTimeout=%d' % (param, timeout_value))
+        conn = engine.connect()
+
+        connection = engine.raw_connection()
+        cursor = connection.cursor()
+
+        logging.info("Connected to the database successfully!")
+    except exc.SQLAlchemyError as e:
+        logging.info("An error occurred: %s", str(e))
+        message = "An error occurred: {}".format(str(e))
+        requests.post(url, headers = headers, data = {'message': message})
+
+    # get max date from data warehouse  
+    try:
+        logging.info("Searching for the maximum date in DWH...")
+        role_query = "SELECT MAX(originalEventTimestamp) FROM dwhstorage"
+        cursor.execute(role_query)
+    
+        result = cursor.fetchone()
+        sql_date = result[0].strftime("y=%Y/m=%m/d=%d")
+        logging.info("SQL max date: " + sql_date)
+    except exc.SQLAlchemyError as e:
+        logging.info("An error occurred: %s", str(e))
+        message = "An error occurred: {}".format(str(e))
+        requests.post(url, headers = headers, data = {'message': message})
+    
+    current_date = datetime.now() - timedelta(days = 1)
+    current_date = current_date.strftime("y=%Y/m=%m/d=%d")
+    logging.info("Current date: " + current_date)
+
+    # one_day = timedelta(days = 1, hours = 0, minutes = 0)
+    # # two_day = timedelta(days = 2, hours = 0, minutes = 0)
+
+    # day_sub_1 = current_date
+    # day_sub_2 = current_date - one_day
+
+    # # convert datetime object to string date
+    # day_sub_1 = day_sub_1.strftime("y=%Y/m=%m/d=%d")
+    # logging.info("Day-1: " + day_sub_1)
+
+    # day_sub_2 = day_sub_2.strftime("y=%Y/m=%m/d=%d")
+    # logging.info("Day-2: " + day_sub_2)
+
+    # get a list of all blob files in the container
     blob_list = []
+    dates = []
     for blob_i in container_client.list_blobs():
-        if blob_i.name[142:158] == yest_date:
+    
+        # check date with blob name
+        if blob_i.name[142:158] > sql_date and blob_i.name[142:158] <= current_date:
             blob_list.append(blob_i.name)
+            dates.append(blob_i.name[142:158])
         
     df_list = []
     # generate a shared access signiture for files and load them into Python
-
     for blob_i in blob_list:
         # generate a shared access signature for each blob file
         sas_i = generate_blob_sas(account_name = account_name,
-                                container_name = container_name,
-                                blob_name = blob_i,
-                                account_key=account_key,
-                                permission=BlobSasPermissions(read=True),
-                                expiry=datetime.utcnow() + timedelta(hours=1))
+                                  container_name = container_name,
+                                  blob_name = blob_i,
+                                  account_key=account_key,
+                                  permission=BlobSasPermissions(read=True),
+                                  expiry=datetime.utcnow() + timedelta(hours=1))
         
         sas_url = 'https://' + account_name+'.blob.core.windows.net/' + container_name + '/' + blob_i + '?' + sas_i
         
@@ -62,6 +126,7 @@ def run():
 
     # convert string to datetime format
     df_combined_normalized["originalEventTimestamp"] = pd.to_datetime(df_combined_normalized["originalEventTimestamp"])
+    # df_combined_normalized["originalEventTimestamp"] = df_combined_normalized["originalEventTimestamp"].dt.strftime("%Y-%m-%d %H:%M:%S")
 
     # rename the columns
     df_combined_normalized = df_combined_normalized.rename(columns={"properties.action_name": "action_name",
@@ -78,65 +143,32 @@ def run():
                                                                     "properties.application_name": "application_name",
                                                                     "properties.host_name": "host_name"})
 
-    # selected only wanted columns
-    # blob_df = df_combined_normalized
+    # choose action_name = 'SELECT'
     blob_df = df_combined_normalized[['originalEventTimestamp', 'action_name', 'succeeded', 'session_id', 'object_id', 'transaction_id', 'client_ip',
                                     'session_server_principal_name', 'server_principal_name', 'database_principal_name', 'database_name', 'object_name', 
                                     'application_name', 'host_name']]
     select_blob_df = blob_df[blob_df["action_name"] == "SELECT"]
-
-    # create SQL server connection string
-    server = 'dwhsqldev01.database.windows.net'
-    database = 'DWHStorage'
-    username = 'boon'
-    password = 'DEE@DA123'
-    driver = '{ODBC Driver 17 for SQL Server}'
-    # table = 'dbo.Customermaster'
-    connectionString = 'DRIVER=' + driver + ';SERVER=' + server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password
-
-    # create database connection instance
-    try:
-        conn = pyodbc.connect(connectionString)
-        logging.info("Connection Success")
-    except pyodbc.DatabaseError as e:
-        logging.info("Database Error: ")
-        logging.info(str(e.value[1]))
-    except pyodbc.Error as e:
-        logging.info("Connection Error: ")
-        logging.info(str(e.vale[1]))
         
-    # specify columns that want to import
-    columns = ['originalEventTimestamp', 'action_name', 'succeeded', 'session_id', 'object_id', 'transaction_id', 'client_ip',
-            'session_server_principal_name', 'server_principal_name', 'database_principal_name', 'database_name', 'object_name', 
-            'application_name', 'host_name']
-    records = select_blob_df[columns].values.tolist()
+    # create unique date list
+    unique_dates = []
+    for date in dates:
+        if date not in unique_dates:
+            unique_dates.append(date)
 
-    date = (current_date - duration).strftime("%Y-%m-%d")
-    url = 'https://notify-api.line.me/api/notify'
-    token = 'aXzjxvURWjvwVPotxsVfdLa9eWSNiBbiuKvzJnIfadZ'
-    headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+ token}
-
-    # create a cursor connection for Customermaster DB
-    insert = '''
-        INSERT INTO DWHStorage.dbo.dwhstorage (originalEventTimestamp, action_name, succeeded, session_id, object_id, 
-                                            transaction_id, client_ip, session_server_principal_name, server_principal_name, 
-                                            database_principal_name, database_name, object_name, application_name, host_name) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    '''
-
+    # write data to a SQL database    
     try:
         logging.info("Running....")
-        cursor = conn.cursor()
-        cursor.executemany(insert, records)
-        cursor.commit();
-        
-        message = "Load data on date {} successfully!!".format(date)
+        select_blob_df.to_sql('dwhstorage', conn, if_exists='append', index=False, chunksize=1000)
+
+        for date in unique_dates:
+            message = "Load data on date {} successfully!!".format(date)
+            requests.post(url, headers = headers, data = {'message': message})
+
+        logging.info("Inserted successfully!")
+    except exc.SQLAlchemyError as e:
+        logging.info("An error occurred: %s", str(e))
+        message = "An error occurred: {}".format(str(e))
         requests.post(url, headers = headers, data = {'message': message})
-        logging.info('Notification sent successfully!')
-    except Exception as e:
-        cursor.rollback()
-        logging.info(e)
     finally:
-        logging.info("Connection close...")
-        cursor.close()
         conn.close()
+        logging.info("Database connection closed.")
